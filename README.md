@@ -9,7 +9,7 @@ Analyzing the Receptive Field for a Convolutional Neural Network can be very use
 
 The RF can be mathematically derived (a good [blogpost on receptive field arithmetic](https://medium.com/mlreview/a-guide-to-receptive-field-arithmetic-for-convolutional-neural-networks-e0f514068807) and [this excellent distill.pub](https://distill.pub/2019/computing-receptive-fields/)). We can also take advantage of [automatic differentiation](https://en.wikipedia.org/wiki/Automatic_differentiation) libraries to compute the RF numerically.
 
-Steps:
+### Steps to compute RF
 
  1. Build the **dynamic computational graph** the conv block
  2. Replace output gradients with all `0s`
@@ -72,7 +72,7 @@ A quick way to verify that this approach works can be found in the [demo noteboo
 
  1. Calculate receptive field for conv block for a given position (important to zero out the bias term!)
  2. Create an input shaped tensor of `1s`
- 3. Zero out all input entries that fall in Receptive Field
+ 3. Zero out all input entries that fall in the Receptive Field
  4. After a forward pass, the only zero entry should be the chosen position (other factors may contribute to zeros in the output, e.g. padding, but the initial output position **must** be `0`)
 
 Illustrated here:
