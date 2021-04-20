@@ -45,7 +45,7 @@ class NumericRF:
         self.info = get_bounds(self.grad_data)
 
 
-    def plot(self, fname, add_text=False, use_out=None):
+    def plot(self, fname=None, add_text=False, use_out=None):
 
         fig = plt.figure(figsize=(13,8))
         ax = [plt.subplot2grid(shape=(4, 1), loc=(0, 0), rowspan=3),
