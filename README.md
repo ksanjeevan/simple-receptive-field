@@ -19,11 +19,10 @@ Steps:
 
 ## Usage
 
-Can refer to the demo notebook or:
+Can refer to the [demo notebook](https://github.com/ksanjeevan/simple-receptive-field/blob/master/demo.ipynb) or:
 
 
 ```python
-
 import torch
 from numericrf import NumericRF
 
@@ -63,4 +62,21 @@ And then we can visualize:
 
 <p align="center">
 <img src="result_plots/example.png" width="650px"/>
+</p>
+
+
+#### Verification 
+
+A quick way to verify that this approach works can be found in the [demo notebook](https://github.com/ksanjeevan/simple-receptive-field/blob/master/demo.ipynb), by following these steps:
+
+
+ 1. Calculate receptive field for conv block for a given position (important to zero out the bias term!)
+ 2. Create an input shaped tensor of `1s`
+ 3. Zero out all input entries that fall in Receptive Field
+ 4. After a forward pass, the only zero entry should be the chosen position (other factors may contribute to zeros in the output, e.g. padding, but the initial output position **must** be `0`)
+
+Illustrated here:
+
+<p align="center">
+<img src="result_plots/verify.png" width="650px"/>
 </p>
