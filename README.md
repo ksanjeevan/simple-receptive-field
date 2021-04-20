@@ -26,18 +26,18 @@ Can refer to the [demo notebook](https://github.com/ksanjeevan/simple-receptive-
 import torch
 from numeric_rf import NumericRF
 
-shape = [1, 1, 60, 130]
+
+shape = [1, 3, 60, 90]
 convs = torch.nn.Sequential(
-                            torch.nn.Conv2d(shape[1], 16, (7,1), stride=3),
-                            torch.nn.Conv2d(16, 16, 5, padding=1),
-                            torch.nn.Conv2d(16, 16, 3, padding=1),
-                            torch.nn.Conv2d(16, 8, 3),
-                            torch.nn.Conv2d(8, 1, 7),
+                                torch.nn.Conv2d(shape[1], 16, (5,3), stride=(3,2)),
+                                torch.nn.Conv2d(16, 16, (5,3), stride=2),
+                                torch.nn.Conv2d(16, 16, 3, padding=1),
+                                torch.nn.Conv2d(16, 8, 3),
         )
 
 rf = NumericRF(convs, shape)
 
-rf.heatmap(pos=(3, 10))
+rf.heatmap(pos=(4, 8))
 
 rf.info()
 
@@ -49,12 +49,12 @@ Will give the estimates of the receptive field for that output positions:
 ```
 {
 	'h': {
-		'bounds': (3, 51), 
-		'range': 48}, 
+		'bounds' : (18, 58), 
+		'range'  : 40}, 
 		
 	'w': {
-		'bounds': (24, 66), 
-		'range': 42}
+		'bounds' : (28, 50), 
+		'range'  : 22}
 }
 ```
 
