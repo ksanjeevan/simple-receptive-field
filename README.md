@@ -1,7 +1,7 @@
 # simple Numerical Receptive Fields
 
 <p align="center">
-<img src="result_plots/rf.gif" width="500px"/>
+<img src="result_plots/rf.gif" width="620px"/>
 </p>
 
 
