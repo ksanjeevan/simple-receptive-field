@@ -22,6 +22,10 @@ class NumericRF:
             conv.bias.data.fill_(0)
             conv.bias.requires_grad = False
         
+    def get_rf_coords(self):
+        h0, w0 = [self._info[k]['bounds'][0] for k in ['h', 'w']]
+        h, w = [self._info[k]['range'] for k in ['h', 'w']]
+        return h0, w0, h, w
 
     def heatmap(self, pos):
         self.pos = pos
@@ -42,8 +46,10 @@ class NumericRF:
         # Step 5: average signal over batch and channel + we ony care about magnitute of signal
         self.grad_data = self.inp.grad.mean([0, 1]).abs().data
         
-        self.info = get_bounds(self.grad_data)
+        self._info = get_bounds(self.grad_data)
 
+    def info(self):
+        return self._info
 
     def plot(self, fname=None, add_text=False, use_out=None):
 
@@ -57,7 +63,7 @@ class NumericRF:
         ax[0].imshow(self.grad_data, cmap='copper', interpolation='nearest')
 
         # Draw RF bounds
-        w0, h0, w, h = self.info['w']['bounds'][0], self.info['h']['bounds'][0], self.info['w']['range'], self.info['h']['range']
+        h0, w0, h, w = self.get_rf_coords()
         ax[0].add_patch(plt.Rectangle((w0-0.5, h0-0.5), w+1, h+1, fill=False, edgecolor='cyan'))
 
         # Plot channel mean of output

@@ -39,7 +39,7 @@ rf = NumericRF(convs, shape)
 
 rf.heatmap(pos=(3, 10))
 
-rf.info
+rf.info()
 
 rf.plot(add_text=True)
 
