@@ -24,7 +24,7 @@ Can refer to the [demo notebook](https://github.com/ksanjeevan/simple-receptive-
 
 ```python
 import torch
-from numeric_rf import numeric_rf
+from numeric_rf import NumericRF
 
 shape = [1, 1, 60, 130]
 convs = torch.nn.Sequential(
@@ -35,7 +35,7 @@ convs = torch.nn.Sequential(
                             torch.nn.Conv2d(8, 1, 7),
         )
 
-rf = numeric_rf(convs, shape)
+rf = NumericRF(convs, shape)
 
 rf.heatmap(pos=(3, 10))
 
