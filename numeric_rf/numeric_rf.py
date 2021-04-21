@@ -2,7 +2,7 @@
 import torch
 import matplotlib.pyplot as plt
 
-from .utils import get_bounds
+from .utils import get_bounds, plot_input_output
 
 class NumericRF:
 
@@ -15,7 +15,6 @@ class NumericRF:
 
         assert len(input_shape) == 4
         self.input_shape = input_shape
-
 
     def _remove_bias(self):
         for conv in self.model:
@@ -48,47 +47,25 @@ class NumericRF:
         
         self._info = get_bounds(self.grad_data)
 
+        return self._info
+
     def info(self):
         return self._info
 
     def plot(self, fname=None, add_text=False, use_out=None):
-
-        fig = plt.figure(figsize=(13,8))
-        ax = [plt.subplot2grid(shape=(4, 1), loc=(0, 0), rowspan=3),
-              plt.subplot2grid(shape=(4, 1), loc=(3, 0))]
-
-        # Plot RF
-        ishape, oshape = map(lambda x: tuple(x.squeeze().shape), [self.inp, self.out])
-        ax[0].set_title("Input shape %s"%(list(ishape)))
-        ax[0].imshow(self.grad_data, cmap='copper', interpolation='nearest')
-
-        # Draw RF bounds
-        h0, w0, h, w = self.get_rf_coords()
-        ax[0].add_patch(plt.Rectangle((w0-0.5, h0-0.5), w+1, h+1, fill=False, edgecolor='cyan'))
-
-        # Plot channel mean of output
-        ax[1].set_title("Output shape %s"%(list(oshape)))
         
-        if use_out is not None:
-            out = use_out
-        else:
-            out = self.model(torch.rand(self.input_shape)).detach().mean([0,1]).numpy()
+        plot_input_output(
+                          gradient=self.grad_data,
+                          output_tensor=self.out,
+                          out_pos=self.pos,
+                          coords=self.get_rf_coords(),
+                          ishape=self.input_shape,
+                          fname=fname,
+                          add_text=add_text,
+                          use_out=use_out
+            )
 
-        ax[1].imshow(out, cmap='binary', interpolation='nearest')
         
-        ax[1].add_patch(plt.Rectangle((self.pos[1]-0.5, self.pos[0]-0.5), 1, 1, color='cyan'))
-
-        if add_text:
-            ax[0].text(w0+w+2, h0, 'Receptive Field', size=17, color='cyan', weight='bold')
-            ax[1].text(self.pos[1]+1, self.pos[0], f'{list(self.pos)}', size=19, color='cyan', weight='bold')
-
-        plt.tight_layout()
-
-
-        if fname is not None:
-            plt.savefig(fname, format='png')
-            plt.close()
-
 
 
 

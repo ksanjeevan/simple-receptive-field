@@ -65,7 +65,7 @@ And then we can visualize:
 </p>
 
 
-#### Verification 
+### Verification 
 
 A quick way to verify that this approach works can be found in the [demo notebook](https://github.com/ksanjeevan/simple-receptive-field/blob/master/demo.ipynb), by following these steps:
 
