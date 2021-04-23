@@ -17,6 +17,10 @@ The RF can be mathematically derived (a good [blogpost on receptive field arithm
  4. **Backprop** this gradient through the graph
  5. Take the `.grad` of the input after the backward pass, and **look for non-zero entries**
 
+
+(*) Effects of activation function on input gradient heatmap values??
+
+
 ## Usage
 
 Can refer to the [demo notebook](https://github.com/ksanjeevan/simple-receptive-field/blob/master/demo.ipynb) or:
