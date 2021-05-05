@@ -5,15 +5,15 @@
 </p>
 
 
-Analyzing the Receptive Field for a Convolutional Neural Network can be very useful in debugging and/or better understanding how the model's output looked at the input. 
+Analyzing the Receptive Field for a Convolutional Neural Network can be very useful in debugging and/or better understanding of how the model's output looked at the input. 
 
-The RF can be mathematically derived (a good [blogpost on receptive field arithmetic](https://medium.com/mlreview/a-guide-to-receptive-field-arithmetic-for-convolutional-neural-networks-e0f514068807) and [this excellent distill.pub](https://distill.pub/2019/computing-receptive-fields/)). We can also take advantage of [automatic differentiation](https://en.wikipedia.org/wiki/Automatic_differentiation) libraries to compute the RF numerically.
+The RF can be mathematically derived (a good [blogpost on receptive field arithmetic](https://medium.com/mlreview/a-guide-to-receptive-field-arithmetic-for-convolutional-neural-networks-e0f514068807) and [this excellent distill.pub](https://distill.pub/2019/computing-receptive-fields/)). But we can also take advantage of [automatic differentiation](https://en.wikipedia.org/wiki/Automatic_differentiation) libraries to compute the RF numerically.
 
 ### Steps to compute RF
 
  1. Build the **dynamic computational graph** of the conv block
  2. Replace output gradients with all `0s`
- 3. Pick a `(h, w)` position in this new gradient and set it to `1s`
+ 3. Pick a `(h, w)` position in this new gradient tensor and set it to `1s`
  4. **Backprop** this gradient through the graph
  5. Take the `.grad` of the input after the backward pass, and **look for non-zero entries**
 
@@ -31,24 +31,25 @@ import torch
 from numeric_rf import NumericRF
 
 
-shape = [1, 3, 60, 90]
+input_shape = [1, 3, 60, 90]
 convs = torch.nn.Sequential(
-                                torch.nn.Conv2d(shape[1], 16, (5,3), stride=(3,2)),
+                                torch.nn.Conv2d(input_shape[1], 16, (5,3), stride=(3,2)),
                                 torch.nn.Conv2d(16, 16, (5,3), stride=2),
                                 torch.nn.Conv2d(16, 16, 3, padding=1),
                                 torch.nn.Conv2d(16, 8, 3),
         )
 
-rf = NumericRF(convs, shape)
+rf = NumericRF(model       = convs,
+ 	       input_shape = input_shape)
 
-rf.heatmap(pos=(4, 8))
+rf.heatmap(pos = (4, 8))
 
 rf.info()
 
-rf.plot(add_text=True)
+rf.plot(add_text = True)
 
 ```
-Will give the estimates of the receptive field for that output positions:
+Will give the receptive field for that output position:
 
 ```
 {
