@@ -40,7 +40,7 @@ class NumericRF:
         grad = torch.zeros_like(self.out)
 
         # Step 3: this could be any non-zero value
-        grad[..., pos[0], pos[1]] = 1
+        grad[..., pos[0], pos[1]] = 1.0
 
         # Step 4: propagate tensor backward
         self.out.backward(gradient=grad)

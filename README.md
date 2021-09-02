@@ -13,12 +13,10 @@ The RF can be mathematically derived (a good [blogpost on receptive field arithm
 
  1. Build the **dynamic computational graph** of the conv block
  2. Replace output gradients with all `0s`
- 3. Pick a `(h, w)` position in this new gradient tensor and set it to `1s`
+ 3. Pick a `(h, w)` position in this new gradient tensor and set it to `non-zeros`
  4. **Backprop** this gradient through the graph
  5. Take the `.grad` of the input after the backward pass, and **look for non-zero entries**
 
-
-(*) Effects of activation function on input gradient heatmap values??
 
 
 ## Usage
@@ -32,17 +30,15 @@ from numeric_rf import NumericRF
 
 # ... given an image tensor `im`
 
-input_shape = im.shape
 convs = torch.nn.Sequential(
-                                torch.nn.Conv2d(input_shape[1], 16, (5,3), stride=(3,2)),
+                                torch.nn.Conv2d(3, 16, (5,3), stride=(3,2)),
                                 torch.nn.Conv2d(16, 16, (5,3), stride=2),
                                 torch.nn.Conv2d(16, 16, 3, stride=2),
                                 torch.nn.Conv2d(16, 16, 3, padding=1),
                                 torch.nn.Conv2d(16, 8, 3),
         )
 
-rf = NumericRF(model       = convs,
- 	       	   input_shape = input_shape)
+rf = NumericRF(model = convs, input_shape =  im.shape)
 
 rf.heatmap(pos = (4, 8))
 
