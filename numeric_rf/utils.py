@@ -14,7 +14,7 @@ def get_bounds(gradient):
     return ret
 
 
-def plot_input_output(gradient, output_tensor, out_pos, coords, ishape, fname=None, add_text=False, use_out=None):
+def plot_input_output(image, gradient, output_tensor, out_pos, coords, ishape, fname=None, add_text=False, use_out=None):
     fig = plt.figure(figsize=(13,8))
     ax = [plt.subplot2grid(shape=(4, 1), loc=(0, 0), rowspan=3),
     plt.subplot2grid(shape=(4, 1), loc=(3, 0))]
@@ -23,7 +23,18 @@ def plot_input_output(gradient, output_tensor, out_pos, coords, ishape, fname=No
     oshape = output_tensor.squeeze().shape
 
     ax[0].set_title("Input shape %s"%(list(ishape)))
-    ax[0].imshow(gradient, cmap='copper', interpolation='nearest')
+    
+    if image is not None:
+        if image.ndim == 4:
+            image = image[0]
+        
+        if not isinstance(image, np.ndarray):
+            print(image.shape)
+            image = image.permute(1, 2, 0).numpy()
+
+        ax[0].imshow(image)
+    else:
+        ax[0].imshow(gradient, cmap='copper', interpolation='nearest')
 
     # Draw RF bounds
     h0, w0, h, w = coords
@@ -35,11 +46,9 @@ def plot_input_output(gradient, output_tensor, out_pos, coords, ishape, fname=No
     if use_out is not None:
         out = use_out
     else:
-
         out = np.random.rand(*oshape)
 
-    ax[1].imshow(out, cmap='binary', interpolation='nearest')
-
+    ax[1].imshow(out.mean(1), cmap='binary', interpolation='nearest')
     ax[1].add_patch(plt.Rectangle((out_pos[1]-0.5, out_pos[0]-0.5), 1, 1, color='cyan'))
 
     if add_text:

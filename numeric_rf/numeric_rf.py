@@ -8,6 +8,9 @@ class NumericRF:
 
     def __init__(self, model, input_shape):
 
+        if not isinstance(input_shape, list):
+            input_shape = list(input_shape)
+
         self.model = model.eval()
 
         if len(input_shape) == 3:
@@ -34,7 +37,7 @@ class NumericRF:
         self.out = self.model(self.inp)
 
         # Step 2: zero out gradient tensor
-        grad = torch.zeros_like(self.out, requires_grad=True)
+        grad = torch.zeros_like(self.out)
 
         # Step 3: this could be any non-zero value
         grad[..., pos[0], pos[1]] = 1
@@ -42,7 +45,7 @@ class NumericRF:
         # Step 4: propagate tensor backward
         self.out.backward(gradient=grad)
 
-        # Step 5: average signal over batch and channel + we ony care about magnitute of signal
+        # Step 5: average signal over batch and channel + we only care about magnitute of signal
         self.grad_data = self.inp.grad.mean([0, 1]).abs().data
         
         self._info = get_bounds(self.grad_data)
@@ -52,9 +55,8 @@ class NumericRF:
     def info(self):
         return self._info
 
-    def plot(self, fname=None, add_text=False, use_out=None):
-        
-        plot_input_output(
+    def plot(self, image=None, fname=None, add_text=False, use_out=None):
+        plot_input_output(image=image,
                           gradient=self.grad_data,
                           output_tensor=self.out,
                           out_pos=self.pos,

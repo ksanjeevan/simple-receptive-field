@@ -30,8 +30,9 @@ Can refer to the [demo notebook](https://github.com/ksanjeevan/simple-receptive-
 import torch
 from numeric_rf import NumericRF
 
+# ... given an image tensor `im`
 
-input_shape = [1, 3, 60, 90]
+input_shape = im.shape
 convs = torch.nn.Sequential(
                                 torch.nn.Conv2d(input_shape[1], 16, (5,3), stride=(3,2)),
                                 torch.nn.Conv2d(16, 16, (5,3), stride=2),
@@ -40,16 +41,16 @@ convs = torch.nn.Sequential(
         )
 
 rf = NumericRF(model       = convs,
- 	       input_shape = input_shape)
+ 	       	   input_shape = input_shape)
 
 rf.heatmap(pos = (4, 8))
 
 rf.info()
 
-rf.plot(add_text = True)
+rf.plot(image = im, add_text = True)
 
 ```
-Will give the receptive field for that output position:
+Will give both the receptive field for that output position:
 
 ```
 {
@@ -63,7 +64,7 @@ Will give the receptive field for that output position:
 }
 ```
 
-And then we can visualize:
+And also the visualization:
 
 <p align="center">
 <img src="result_plots/example.png" width="650px"/>
