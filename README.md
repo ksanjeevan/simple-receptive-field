@@ -36,6 +36,7 @@ input_shape = im.shape
 convs = torch.nn.Sequential(
                                 torch.nn.Conv2d(input_shape[1], 16, (5,3), stride=(3,2)),
                                 torch.nn.Conv2d(16, 16, (5,3), stride=2),
+                                torch.nn.Conv2d(16, 16, 3, stride=2),
                                 torch.nn.Conv2d(16, 16, 3, padding=1),
                                 torch.nn.Conv2d(16, 8, 3),
         )
